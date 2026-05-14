@@ -11,12 +11,10 @@ from models.exceptions import AutenticacionError
 def iniciar_sesion_bibliotecario():
     dao = UsuarioDAO()
     id_usuario = input("Ingrese su ID de bibliotecario: ").strip()
-    usuario = dao.buscar_por_id(id_usuario)
-
+    password = input("Ingrese su contraseña: ").strip()
+    usuario, msg = dao.autenticar_bibliotecario(id_usuario, password)
     if not usuario:
-        raise AutenticacionError("Usuario no existe")
-    if usuario["tipo_usuario"] != "bibliotecario":
-        raise AutenticacionError("Acceso denegado: solo bibliotecarios")
+        raise AutenticacionError(msg)
 
     print(f"Bienvenido/a {usuario['nombre']}")
     return usuario
@@ -26,11 +24,18 @@ def menu_usuarios():
     dao = UsuarioDAO()
     while True:
         print("\n==== Gestión de usuarios ====")
-        print("1. Crear usuario\n2. Listar usuarios\n3. Buscar usuario\n4. Actualizar usuario\n5. Eliminar usuario\n0. Volver")
+        print("1. Crear usuario\n2. Listar usuarios\n3. Buscar usuario\n4. Actualizar usuario\n5. Eliminar usuario\n6. Cambiar password\n7. Cambiar estado\n0. Volver")
         op = input("Opción: ")
         try:
             if op == "1":
-                u = Usuario(input("ID usuario: "), input("Nombre: "), input("Dirección/correo: "), input("Tipo (bibliotecario/suscriptor): "))
+                u = Usuario(
+                    input("ID usuario: "),
+                    input("Nombre: "),
+                    input("Dirección/correo: "),
+                    input("Tipo (bibliotecario/suscriptor): "),
+                    input("Password: "),
+                    input("Estado (activo/inactivo): ") or "activo"
+                )
                 dao.crear(u)
                 print("Usuario creado")
             elif op == "2":
@@ -41,6 +46,12 @@ def menu_usuarios():
             elif op == "4":
                 dao.actualizar(input("ID: "), input("Nuevo nombre: "), input("Nueva dirección: "), input("Nuevo tipo: "))
                 print("Usuario actualizado")
+            elif op == "6":
+                dao.actualizar_password(input("ID: "), input("Nuevo password: "))
+                print("Password actualizada")
+            elif op == "7":
+                dao.actualizar_estado(input("ID: "), input("Nuevo estado (activo/inactivo): "))
+                print("Estado actualizado")
             elif op == "5":
                 ok, msg = dao.eliminar(input("ID: "))
                 print(msg)

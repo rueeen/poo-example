@@ -19,6 +19,9 @@ CREATE TABLE `usuarios` (
   `nombre` varchar(100) NOT NULL,
   `direccion` varchar(200) DEFAULT NULL,
   `tipo_usuario` enum('bibliotecario','suscriptor') NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `estado` enum('activo','inactivo') NOT NULL DEFAULT 'activo',
+  `ultimo_acceso` datetime DEFAULT NULL,
   PRIMARY KEY (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -57,10 +60,10 @@ CREATE TABLE `prestamos` (
   CONSTRAINT `prestamos_ibfk_2` FOREIGN KEY (`id_libro`) REFERENCES `libros` (`id_libro`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `usuarios` (`id_usuario`, `nombre`, `direccion`, `tipo_usuario`) VALUES
-('admin1','Ana Bibliotecaria','admin@biblio.cl','bibliotecario'),
-('sus001','Carlos Soto','carlos@correo.cl','suscriptor'),
-('sus002','María Díaz','maria@correo.cl','suscriptor');
+INSERT INTO `usuarios` (`id_usuario`, `nombre`, `direccion`, `tipo_usuario`, `password`, `estado`, `ultimo_acceso`) VALUES
+('admin1','Ana Bibliotecaria','admin@biblio.cl','bibliotecario','admin123','activo',NULL),
+('sus001','Carlos Soto','carlos@correo.cl','suscriptor','sus001123','activo',NULL),
+('sus002','María Díaz','maria@correo.cl','suscriptor','sus002123','inactivo',NULL);
 
 INSERT INTO `autores` (`nombre`,`nacionalidad`,`fecha_nacimiento`) VALUES
 ('Gabriel García Márquez','Colombiana','1927-03-06'),

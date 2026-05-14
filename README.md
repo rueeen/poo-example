@@ -25,6 +25,7 @@ python main.py
 ```
 
 ## Datos de prueba
-- Bibliotecario: `admin1`
+- Bibliotecario: `admin1` / password `admin123`
 - Suscriptores: `sus001`, `sus002`
+- Passwords suscriptores: `sus001123`, `sus002123`
 - 2 autores, 3 libros y 1 préstamo activo ya cargados por SQL.

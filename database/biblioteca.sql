@@ -6,7 +6,10 @@ CREATE TABLE usuarios (
     id_usuario VARCHAR(20) PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     direccion VARCHAR(200),
-    tipo_usuario ENUM('bibliotecario','suscriptor') NOT NULL
+    tipo_usuario ENUM('bibliotecario','suscriptor') NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    estado ENUM('activo','inactivo') NOT NULL DEFAULT 'activo',
+    ultimo_acceso DATETIME NULL
 );
 
 CREATE TABLE autores (
@@ -37,10 +40,10 @@ CREATE TABLE prestamos (
     FOREIGN KEY (id_libro) REFERENCES libros(id_libro)
 );
 
-INSERT INTO usuarios VALUES
-('admin1','Ana Bibliotecaria','admin@biblio.cl','bibliotecario'),
-('sus001','Carlos Soto','carlos@correo.cl','suscriptor'),
-('sus002','María Díaz','maria@correo.cl','suscriptor');
+INSERT INTO usuarios(id_usuario,nombre,direccion,tipo_usuario,password,estado,ultimo_acceso) VALUES
+('admin1','Ana Bibliotecaria','admin@biblio.cl','bibliotecario','admin123','activo',NULL),
+('sus001','Carlos Soto','carlos@correo.cl','suscriptor','sus001123','activo',NULL),
+('sus002','María Díaz','maria@correo.cl','suscriptor','sus002123','inactivo',NULL);
 
 INSERT INTO autores(nombre,nacionalidad,fecha_nacimiento) VALUES
 ('Gabriel García Márquez','Colombiana','1927-03-06'),
