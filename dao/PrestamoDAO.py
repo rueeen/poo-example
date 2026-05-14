@@ -1,4 +1,5 @@
 from models.Conexion import Conexion
+from models.exceptions import OperacionBDNoAplicadaError
 
 
 class PrestamoDAO:
@@ -11,15 +12,36 @@ class PrestamoDAO:
             return False, "Usuario no existe"
         if usuario["tipo_usuario"] != "suscriptor":
             return False, "Solo usuarios suscriptores pueden recibir préstamos"
+
         libro = self.conexion.listar_uno("SELECT * FROM libros WHERE id_libro=%s", (id_libro,))
         if not libro:
             return False, "Libro no existe"
         if libro["stock"] <= 0:
             return False, "No hay stock disponible"
 
-        self.conexion.ejecutar("INSERT INTO prestamos(id_usuario,id_libro,fecha_prestamo,estado) VALUES (%s,%s,CURDATE(),'activo')", (id_usuario, id_libro))
-        self.conexion.ejecutar("UPDATE libros SET stock = stock - 1 WHERE id_libro=%s", (id_libro,))
-        return True, "Préstamo creado"
+        try:
+            self.conexion.iniciar_transaccion()
+            insercion = self.conexion.ejecutar(
+                "INSERT INTO prestamos(id_usuario,id_libro,fecha_prestamo,estado) VALUES (%s,%s,CURDATE(),'activo')",
+                (id_usuario, id_libro),
+                autocommit=False,
+            )
+            if insercion["rowcount"] != 1:
+                raise OperacionBDNoAplicadaError("No se pudo insertar el préstamo")
+
+            actualizacion = self.conexion.ejecutar(
+                "UPDATE libros SET stock = stock - 1 WHERE id_libro=%s",
+                (id_libro,),
+                autocommit=False,
+            )
+            if actualizacion["rowcount"] != 1:
+                raise OperacionBDNoAplicadaError("No se pudo actualizar el stock")
+
+            self.conexion.confirmar()
+            return True, "Préstamo creado"
+        except Exception as e:
+            self.conexion.deshacer()
+            return False, f"Error al crear préstamo: {e}"
 
     def listar(self):
         sql = """SELECT p.*,u.nombre usuario,l.titulo libro FROM prestamos p

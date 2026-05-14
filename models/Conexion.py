@@ -10,12 +10,29 @@ class Conexion:
             database='biblioteca'
         )
 
-    def ejecutar(self, sql, datos=None):
+    def iniciar_transaccion(self):
+        self.__conn.start_transaction()
+        return self
+
+    def confirmar(self):
+        self.__conn.commit()
+        return self
+
+    def deshacer(self):
+        self.__conn.rollback()
+        return self
+
+    def ejecutar(self, sql, datos=None, autocommit=True):
         cursor = self.__conn.cursor()
         try:
             cursor.execute(sql, datos)
-            self.__conn.commit()
-            return cursor.lastrowid, cursor.rowcount
+            if autocommit:
+                self.__conn.commit()
+            return {
+                "ok": cursor.rowcount >= 0,
+                "lastrowid": cursor.lastrowid,
+                "rowcount": cursor.rowcount,
+            }
         finally:
             cursor.close()
 
