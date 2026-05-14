@@ -5,6 +5,21 @@ from dao.PrestamoDAO import PrestamoDAO
 from models.Usuario import Usuario
 from models.Autor import Autor
 from models.Libro import Libro
+from models.exceptions import AutenticacionError
+
+
+def iniciar_sesion_bibliotecario():
+    dao = UsuarioDAO()
+    id_usuario = input("Ingrese su ID de bibliotecario: ").strip()
+    usuario = dao.buscar_por_id(id_usuario)
+
+    if not usuario:
+        raise AutenticacionError("Usuario no existe")
+    if usuario["tipo_usuario"] != "bibliotecario":
+        raise AutenticacionError("Acceso denegado: solo bibliotecarios")
+
+    print(f"Bienvenido/a {usuario['nombre']}")
+    return usuario
 
 
 def menu_usuarios():
@@ -127,6 +142,12 @@ def menu_prestamos():
 
 
 def main():
+    try:
+        iniciar_sesion_bibliotecario()
+    except AutenticacionError as e:
+        print(f"Error de autenticación: {e}")
+        return
+
     while True:
         print("\n==== Sistema Biblioteca ====")
         print("1. Gestión de usuarios\n2. Gestión de autores\n3. Gestión de libros\n4. Gestión de préstamos\n0. Salir")
