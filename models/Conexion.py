@@ -10,6 +10,9 @@ class Conexion:
             database='biblioteca'
         )
 
+    def _crear_cursor(self, dictionary=True):
+        return self.__conn.cursor(dictionary=dictionary)
+
     def iniciar_transaccion(self):
         self.__conn.start_transaction()
         return self
@@ -23,7 +26,7 @@ class Conexion:
         return self
 
     def ejecutar(self, sql, datos=None, autocommit=True):
-        cursor = self.__conn.cursor()
+        cursor = self._crear_cursor(dictionary=False)
         try:
             cursor.execute(sql, datos)
             if autocommit:
@@ -37,7 +40,7 @@ class Conexion:
             cursor.close()
 
     def listar(self, sql, datos=None):
-        cursor = self.__conn.cursor(dictionary=True)
+        cursor = self._crear_cursor(dictionary=True)
         try:
             cursor.execute(sql, datos)
             return cursor.fetchall()
@@ -45,7 +48,7 @@ class Conexion:
             cursor.close()
 
     def listar_uno(self, sql, datos=None):
-        cursor = self.__conn.cursor(dictionary=True)
+        cursor = self._crear_cursor(dictionary=True)
         try:
             cursor.execute(sql, datos)
             return cursor.fetchone()
