@@ -44,13 +44,16 @@ def menu_usuarios():
             elif op == "3":
                 print(dao.buscar_por_id(input("ID: ")))
             elif op == "4":
-                dao.actualizar(input("ID: "), input("Nuevo nombre: "), input("Nueva dirección: "), input("Nuevo tipo: "))
+                dao.actualizar(input("ID: "), input("Nuevo nombre: "), input(
+                    "Nueva dirección: "), input("Nuevo tipo: "))
                 print("Usuario actualizado")
             elif op == "6":
-                dao.actualizar_password(input("ID: "), input("Nuevo password: "))
+                dao.actualizar_password(
+                    input("ID: "), input("Nuevo password: "))
                 print("Password actualizada")
             elif op == "7":
-                dao.actualizar_estado(input("ID: "), input("Nuevo estado (activo/inactivo): "))
+                dao.actualizar_estado(input("ID: "), input(
+                    "Nuevo estado (activo/inactivo): "))
                 print("Estado actualizado")
             elif op == "5":
                 ok, msg = dao.eliminar(input("ID: "))
@@ -69,7 +72,8 @@ def menu_autores():
         op = input("Opción: ")
         try:
             if op == "1":
-                a = Autor(nombre=input("Nombre: "), nacionalidad=input("Nacionalidad: "), fecha_nacimiento=input("Fecha nacimiento (YYYY-MM-DD opcional): ") or None)
+                a = Autor(nombre=input("Nombre: "), nacionalidad=input("Nacionalidad: "),
+                          fecha_nacimiento=input("Fecha nacimiento (YYYY-MM-DD opcional): ") or None)
                 dao.crear(a)
                 print("Autor creado")
             elif op == "2":
@@ -78,7 +82,8 @@ def menu_autores():
             elif op == "3":
                 print(dao.buscar(input("ID autor: ")))
             elif op == "4":
-                dao.actualizar(input("ID: "), input("Nombre: "), input("Nacionalidad: "), input("Fecha nacimiento: ") or None)
+                dao.actualizar(input("ID: "), input("Nombre: "), input(
+                    "Nacionalidad: "), input("Fecha nacimiento: ") or None)
                 print("Autor actualizado")
             elif op == "5":
                 ok, msg = dao.eliminar(input("ID: "))
@@ -97,7 +102,8 @@ def menu_libros():
         op = input("Opción: ")
         try:
             if op == "1":
-                l = Libro(titulo=input("Título: "), isbn=input("ISBN: "), anio_publicacion=input("Año: "), stock=int(input("Stock: ")), id_autor=input("ID autor: "))
+                l = Libro(titulo=input("Título: "), isbn=input("ISBN: "), anio_publicacion=input(
+                    "Año: "), stock=int(input("Stock: ")), id_autor=input("ID autor: "))
                 ok, msg = dao.crear(l)
                 print(msg)
             elif op == "2":
@@ -107,7 +113,8 @@ def menu_libros():
                 for l in dao.buscar(input("Buscar por id, isbn o título: ")):
                     print(l)
             elif op == "4":
-                dao.actualizar(input("ID libro: "), input("Título: "), input("ISBN: "), input("Año: "), int(input("Stock: ")), input("ID autor: "))
+                dao.actualizar(input("ID libro: "), input("Título: "), input(
+                    "ISBN: "), input("Año: "), int(input("Stock: ")), input("ID autor: "))
                 print("Libro actualizado")
             elif op == "5":
                 ok, msg = dao.eliminar(input("ID libro: "))
@@ -138,10 +145,12 @@ def menu_prestamos():
                 ok, msg = dao.devolver(input("ID préstamo: "))
                 print(msg)
             elif op == "5":
-                ok, msg = dao.cambiar_usuario(input("ID préstamo: "), input("Nuevo ID usuario: "))
+                ok, msg = dao.cambiar_usuario(
+                    input("ID préstamo: "), input("Nuevo ID usuario: "))
                 print(msg)
             elif op == "6":
-                ok, msg = dao.cambiar_libro(input("ID préstamo: "), input("Nuevo ID libro: "))
+                ok, msg = dao.cambiar_libro(
+                    input("ID préstamo: "), input("Nuevo ID libro: "))
                 print(msg)
             elif op == "7":
                 for p in dao.listar_activos():

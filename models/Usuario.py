@@ -56,5 +56,6 @@ class Usuario(Persona):
 
     def validar_tipo_usuario(self, tipo_usuario):
         if tipo_usuario not in self.TIPOS_VALIDOS:
-            raise ValueError("tipo_usuario debe ser 'bibliotecario' o 'suscriptor'")
+            raise ValueError(
+                "tipo_usuario debe ser 'bibliotecario' o 'suscriptor'")
         return tipo_usuario

@@ -39,13 +39,16 @@ class UsuarioDAO:
         if usuario["password"] != password:
             return None, "Contraseña inválida"
 
-        self.conexion.ejecutar("UPDATE usuarios SET ultimo_acceso=NOW() WHERE id_usuario=%s", (id_usuario,))
+        self.conexion.ejecutar(
+            "UPDATE usuarios SET ultimo_acceso=NOW() WHERE id_usuario=%s", (id_usuario,))
         usuario["ultimo_acceso"] = "actualizado"
         return usuario, "OK"
 
     def eliminar(self, id_usuario):
-        activo = self.conexion.listar_uno("SELECT COUNT(*) total FROM prestamos WHERE id_usuario=%s AND estado='activo'", (id_usuario,))
+        activo = self.conexion.listar_uno(
+            "SELECT COUNT(*) total FROM prestamos WHERE id_usuario=%s AND estado='activo'", (id_usuario,))
         if activo["total"] > 0:
             return False, "No se puede eliminar: el usuario tiene préstamos activos"
-        self.conexion.ejecutar("DELETE FROM usuarios WHERE id_usuario=%s", (id_usuario,))
+        self.conexion.ejecutar(
+            "DELETE FROM usuarios WHERE id_usuario=%s", (id_usuario,))
         return True, "Usuario eliminado"
