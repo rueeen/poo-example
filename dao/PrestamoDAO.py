@@ -1,5 +1,4 @@
 from models.Conexion import Conexion
-from models.exceptions import OperacionBDNoAplicadaError
 
 
 class PrestamoDAO:
@@ -29,8 +28,7 @@ class PrestamoDAO:
                 autocommit=False,
             )
             if insercion["rowcount"] != 1:
-                raise OperacionBDNoAplicadaError(
-                    "No se pudo insertar el préstamo")
+                raise Exception("No se pudo insertar el préstamo")
 
             actualizacion = self.conexion.ejecutar(
                 "UPDATE libros SET stock = stock - 1 WHERE id_libro=%s",
@@ -38,8 +36,7 @@ class PrestamoDAO:
                 autocommit=False,
             )
             if actualizacion["rowcount"] != 1:
-                raise OperacionBDNoAplicadaError(
-                    "No se pudo actualizar el stock")
+                raise Exception("No se pudo actualizar el stock")
 
             self.conexion.confirmar()
             return True, "Préstamo creado"

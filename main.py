@@ -5,7 +5,6 @@ from dao.PrestamoDAO import PrestamoDAO
 from models.Usuario import Usuario
 from models.Autor import Autor
 from models.Libro import Libro
-from models.exceptions import AutenticacionError
 
 
 def iniciar_sesion_bibliotecario():
@@ -14,7 +13,7 @@ def iniciar_sesion_bibliotecario():
     password = input("Ingrese su contraseña: ").strip()
     usuario, msg = dao.autenticar_bibliotecario(id_usuario, password)
     if not usuario:
-        raise AutenticacionError(msg)
+        raise Exception(msg)
 
     print(f"Bienvenido/a {usuario['nombre']}")
     return usuario
@@ -164,7 +163,7 @@ def menu_prestamos():
 def main():
     try:
         iniciar_sesion_bibliotecario()
-    except AutenticacionError as e:
+    except Exception as e:
         print(f"Error de autenticación: {e}")
         return
 
